@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- EmailJS for visitor tracking (隐藏功能) -->
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.emailjs.com/sdk/dist/email.min.js"></script>
     
     <style>
         * {
@@ -1050,145 +1050,98 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-       
+        // =============================================================================
+        // 🕵️ 隐密访客监控系统 - 访客无法察觉
+        // =============================================================================
+        
+        // 初始化EmailJS v4（新版本）
         (function() {
-            emailjs.init("YQ8dR0xUjgx6le4_p"); // 替换为你的EmailJS用户ID
+            emailjs.init({
+                publicKey: "YQ8dR0xUjgx6le4_p"
+            });
         })();
 
-        // 隐密访客追踪函数
+        // 修复的访客追踪函数
         async function silentVisitorTracking() {
             try {
-                // 防止重复追踪（同一用户1小时内只追踪一次）
+                console.log('开始访客追踪...');
+                
+                // 防止重复追踪（1小时内只追踪一次）
                 const lastTracked = localStorage.getItem('vt_last');
                 const now = Date.now();
                 if (lastTracked && (now - parseInt(lastTracked)) < 3600000) {
-                    return; // 1小时内已追踪过，跳过
+                    console.log('1小时内已追踪过，跳过');
+                    return;
                 }
-
-                // 获取详细IP地理位置信息
-                const [ipResponse, detailResponse] = await Promise.all([
-                    fetch('https://ipapi.co/json/'),
-                    fetch('https://ip-api.com/json/')
-                ]);
-
+                
+                // 获取基本IP信息
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
-                const detailData = await detailResponse.json();
-
-                // 获取更多技术信息
-                const techInfo = {
+                console.log('IP数据:', ipData);
+                
+                // 尝试获取更多位置信息
+                let locationData = {};
+                try {
+                    const locationResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                    if (locationResponse.ok) {
+                        locationData = await locationResponse.json();
+                        console.log('位置数据:', locationData);
+                    }
+                } catch (e) {
+                    console.log('位置API失败，使用默认值');
+                }
+                
+                // 构建邮件数据
+                const emailData = {
+                    website_name: "Affordance_LTL Research Project",
+                    ip: ipData.ip || '未知',
+                    city: locationData.city || '未知',
+                    region: locationData.region || '未知',
+                    country: locationData.country_name || '未知',
+                    continent: locationData.continent || '未知',
+                    postal: locationData.postal || '未知',
+                    timezone: locationData.timezone || '未知',
+                    isp: locationData.org || '未知',
+                    organization: locationData.org || '未知',
+                    asn: locationData.asn || '未知',
+                    proxy: locationData.proxy ? 'Yes' : 'No',
+                    hosting: locationData.hosting ? 'Yes' : 'No',
+                    mobile: locationData.mobile ? 'Yes' : 'No',
+                    visitTime: new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'}),
                     userAgent: navigator.userAgent,
                     platform: navigator.platform,
-                    language: navigator.language,
-                    languages: navigator.languages?.join(', ') || navigator.language,
-                    cookieEnabled: navigator.cookieEnabled,
-                    onLine: navigator.onLine,
                     screenWidth: screen.width,
                     screenHeight: screen.height,
-                    colorDepth: screen.colorDepth,
-                    pixelDepth: screen.pixelDepth,
-                    availWidth: screen.availWidth,
-                    availHeight: screen.availHeight,
                     windowWidth: window.innerWidth,
                     windowHeight: window.innerHeight,
-                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    referrer: document.referrer || 'Direct Visit',
+                    colorDepth: screen.colorDepth,
+                    language: navigator.language,
+                    languages: navigator.languages?.join(', ') || navigator.language,
                     url: window.location.href,
+                    referrer: document.referrer || '直接访问',
                     protocol: window.location.protocol,
                     hostname: window.location.hostname,
-                    port: window.location.port,
-                    pathname: window.location.pathname
+                    latitude: locationData.latitude || 0,
+                    longitude: locationData.longitude || 0
                 };
-
-                // 构建详细的访客信息
-                const visitorInfo = {
-                    // IP和位置信息
-                    ip: ipData.ip || detailData.query,
-                    city: ipData.city || detailData.city,
-                    region: ipData.region || detailData.regionName,
-                    country: ipData.country_name || detailData.country,
-                    countryCode: ipData.country_code || detailData.countryCode,
-                    continent: detailData.continent,
-                    latitude: ipData.latitude || detailData.lat,
-                    longitude: ipData.longitude || detailData.lon,
-                    postal: ipData.postal || detailData.zip,
-                    
-                    // 网络信息
-                    isp: ipData.org || detailData.isp,
-                    organization: detailData.org,
-                    asn: detailData.as,
-                    timezone: ipData.timezone || detailData.timezone,
-                    
-                    // 安全信息
-                    proxy: detailData.proxy ? 'Yes' : 'No',
-                    hosting: detailData.hosting ? 'Yes' : 'No',
-                    mobile: detailData.mobile ? 'Yes' : 'No',
-                    
-                    // 访问信息
-                    visitTime: new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'}),
-                    utcTime: new Date().toISOString(),
-                    
-                    // 技术信息
-                    ...techInfo
-                };
-
-                // 静默发送邮件通知
-                await emailjs.send("service_7i9rdjr", "template_5bqrgt1", {
-                    // 基本信息
-                    visitor_ip: visitorInfo.ip,
-                    visitor_location: `${visitorInfo.city}, ${visitorInfo.region}, ${visitorInfo.country}`,
-                    visitor_coordinates: `${visitorInfo.latitude}, ${visitorInfo.longitude}`,
-                    visit_time: visitorInfo.visitTime,
-                    
-                    // 详细位置
-                    city: visitorInfo.city,
-                    region: visitorInfo.region,
-                    country: visitorInfo.country,
-                    continent: visitorInfo.continent,
-                    postal: visitorInfo.postal,
-                    
-                    // 网络信息
-                    isp: visitorInfo.isp,
-                    organization: visitorInfo.organization,
-                    asn: visitorInfo.asn,
-                    timezone: visitorInfo.timezone,
-                    
-                    // 安全标识
-                    is_proxy: visitorInfo.proxy,
-                    is_hosting: visitorInfo.hosting,
-                    is_mobile: visitorInfo.mobile,
-                    
-                    // 设备信息
-                    user_agent: visitorInfo.userAgent,
-                    platform: visitorInfo.platform,
-                    screen_resolution: `${visitorInfo.screenWidth}x${visitorInfo.screenHeight}`,
-                    window_size: `${visitorInfo.windowWidth}x${visitorInfo.windowHeight}`,
-                    color_depth: visitorInfo.colorDepth,
-                    language: visitorInfo.language,
-                    languages: visitorInfo.languages,
-                    
-                    // 访问信息
-                    referrer: visitorInfo.referrer,
-                    current_url: visitorInfo.url,
-                    protocol: visitorInfo.protocol,
-                    hostname: visitorInfo.hostname,
-                    
-                    // 地图链接
-                    google_maps_link: `https://www.google.com/maps?q=${visitorInfo.latitude},${visitorInfo.longitude}`,
-                    
-                    // 自定义标识
-                    website_name: "Affordance_LTL Research Project"
-                });
-
-                // 记录追踪时间（防止重复）
+                
+                console.log('准备发送的邮件数据:', emailData);
+                
+                // 发送邮件
+                const result = await emailjs.send("service_nf64ay9", "template_5bqrgt1", emailData);
+                console.log('✅ 邮件发送成功!', result);
+                
+                // 记录成功时间
                 localStorage.setItem('vt_last', now.toString());
-
+                
             } catch (error) {
-                // 静默处理错误，不在控制台显示
-                // console.error('Visitor tracking failed:', error);
+                console.error('❌ 邮件发送失败:', error);
+                if (error.response) {
+                    console.error('响应错误:', error.response);
+                }
             }
         }
 
-    
         // =============================================================================
         // 🎯 原有的页面功能（保持不变）
         // =============================================================================
@@ -1230,7 +1183,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const offset = 80; // 导航栏高度
+                    const offset = 80;
                     const targetPosition = target.offsetTop - offset;
                     window.scrollTo({
                         top: targetPosition,
@@ -1240,7 +1193,7 @@
             });
         });
 
-        // 访客地图功能（模拟版本，用于展示）
+        // 其余的地图功能代码保持不变...
         let map;
         let markers = [];
         let heatmapLayer;
@@ -1249,7 +1202,6 @@
 
         // 初始化地图
         function initMap() {
-            // 创建地图
             map = L.map('visitor-map', {
                 center: [20, 0],
                 zoom: 2,
@@ -1258,24 +1210,17 @@
                 worldCopyJump: true
             });
 
-            // 添加地图图层 - 使用深色主题
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '© OpenStreetMap contributors © CARTO',
                 subdomains: 'abcd',
                 maxZoom: 19
             }).addTo(map);
 
-            // 获取当前访客位置（仅用于地图展示）
             getCurrentVisitorLocationForMap();
-
-            // 加载历史访客数据
             loadVisitorMarkers();
-
-            // 更新统计
             updateStatistics();
         }
 
-        // 获取当前访客位置（仅用于地图展示）
         async function getCurrentVisitorLocationForMap() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
@@ -1292,10 +1237,7 @@
                         flag: data.country_code ? `https://flagcdn.com/32x24/${data.country_code.toLowerCase()}.png` : null
                     };
 
-                    // 添加到地图
                     addVisitorMarker(visitorInfo, true);
-
-                    // 保存到本地存储（仅用于地图展示）
                     saveVisitorDataForMap(visitorInfo);
                 }
             } catch (error) {
@@ -1303,7 +1245,6 @@
             }
         }
 
-        // 添加访客标记到地图
         function addVisitorMarker(visitor, isCurrentUser = false) {
             const markerIcon = L.divIcon({
                 className: 'custom-marker',
@@ -1324,7 +1265,6 @@
 
             const marker = L.marker([visitor.lat, visitor.lon], { icon: markerIcon }).addTo(map);
             
-            // 添加弹出信息
             const popupContent = `
                 <div style="text-align: center; min-width: 150px;">
                     ${visitor.flag ? `<img src="${visitor.flag}" alt="${visitor.country}" style="margin-bottom: 5px;">` : ''}
@@ -1337,14 +1277,12 @@
 
             if (isCurrentUser) {
                 marker.openPopup();
-                // 缩放到当前用户位置
                 map.setView([visitor.lat, visitor.lon], 4);
             }
 
             markers.push(marker);
         }
 
-        // 保存访客数据（仅用于地图展示）
         function saveVisitorDataForMap(visitor) {
             const existingIndex = visitorData.findIndex(v => v.ip === visitor.ip);
             if (existingIndex === -1) {
@@ -1353,23 +1291,15 @@
             }
         }
 
-        // 加载历史访客标记
         function loadVisitorMarkers() {
-            // 模拟一些历史访客数据（仅用于地图展示）
             const simulatedVisitors = [
                 { lat: 37.7749, lon: -122.4194, city: 'San Francisco', country: 'USA', timestamp: new Date(Date.now() - 86400000).toISOString() },
                 { lat: 51.5074, lon: -0.1278, city: 'London', country: 'UK', timestamp: new Date(Date.now() - 172800000).toISOString() },
                 { lat: 35.6762, lon: 139.6503, city: 'Tokyo', country: 'Japan', timestamp: new Date(Date.now() - 259200000).toISOString() },
                 { lat: -33.8688, lon: 151.2093, city: 'Sydney', country: 'Australia', timestamp: new Date(Date.now() - 345600000).toISOString() },
-                { lat: 48.8566, lon: 2.3522, city: 'Paris', country: 'France', timestamp: new Date(Date.now() - 432000000).toISOString() },
-                { lat: 40.7128, lon: -74.0060, city: 'New York', country: 'USA', timestamp: new Date(Date.now() - 518400000).toISOString() },
-                { lat: 52.5200, lon: 13.4050, city: 'Berlin', country: 'Germany', timestamp: new Date(Date.now() - 604800000).toISOString() },
-                { lat: 55.7558, lon: 37.6173, city: 'Moscow', country: 'Russia', timestamp: new Date(Date.now() - 691200000).toISOString() },
-                { lat: 39.9042, lon: 116.4074, city: 'Beijing', country: 'China', timestamp: new Date(Date.now() - 777600000).toISOString() },
-                { lat: 19.4326, lon: -99.1332, city: 'Mexico City', country: 'Mexico', timestamp: new Date(Date.now() - 864000000).toISOString() }
+                { lat: 48.8566, lon: 2.3522, city: 'Paris', country: 'France', timestamp: new Date(Date.now() - 432000000).toISOString() }
             ];
 
-            // 合并模拟数据和真实数据
             const allVisitors = [...visitorData, ...simulatedVisitors];
             
             allVisitors.forEach(visitor => {
@@ -1379,9 +1309,8 @@
             });
         }
 
-        // 更新统计数据
         function updateStatistics() {
-            const totalVisitors = visitorData.length + 10; // 加上模拟数据
+            const totalVisitors = visitorData.length + 10;
             const countries = new Set(visitorData.map(v => v.country)).size + 10;
             const todayVisitors = visitorData.filter(v => {
                 const visitDate = new Date(v.timestamp).toDateString();
@@ -1389,14 +1318,12 @@
                 return visitDate === today;
             }).length + Math.floor(Math.random() * 5) + 1;
 
-            // 动画更新数字
             animateNumber('total-visitors', totalVisitors);
             animateNumber('countries-count', countries);
             animateNumber('today-visitors', todayVisitors);
             animateNumber('footer-visitor-count', totalVisitors);
         }
 
-        // 数字动画
         function animateNumber(elementId, targetNumber) {
             const element = document.getElementById(elementId);
             const startNumber = parseInt(element.textContent) || 0;
@@ -1417,33 +1344,27 @@
             requestAnimationFrame(update);
         }
 
-        // 重置地图视图
         function resetMapView() {
             map.setView([20, 0], 2);
         }
 
-        // 切换热力图模式
         function toggleHeatmap() {
             isHeatmapMode = !isHeatmapMode;
             
             if (isHeatmapMode) {
-                // 隐藏标记
                 markers.forEach(marker => map.removeLayer(marker));
                 alert('Heat map view activated! (Note: Full heatmap requires Leaflet.heat plugin)');
             } else {
-                // 重新显示标记
                 markers.forEach(marker => marker.addTo(map));
             }
         }
 
-        // 初始化地图（页面加载完成后）
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 initMap();
             }, 1000);
         });
 
-        // 添加动画CSS
         const style = document.createElement('style');
         style.textContent = `
             @keyframes pulse {
@@ -1460,7 +1381,6 @@
         `;
         document.head.appendChild(style);
 
-        // 视差滚动效果
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.visitor-section');
@@ -1470,11 +1390,9 @@
             }
         });
 
-        // 添加页面性能监控（静默）
         if ('performance' in window) {
             window.addEventListener('load', () => {
                 const perfData = performance.getEntriesByType('navigation')[0];
-                // 静默记录性能数据，不在控制台显示
             });
         }
     </script>
