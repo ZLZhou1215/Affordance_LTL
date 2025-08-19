@@ -19,13 +19,10 @@
     <!-- 解决favicon.ico 404错误 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🤖</text></svg>">
     
-    <!-- Leaflet CSS for map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 修复后的 EmailJS SDK -->
+    <!-- EmailJS SDK for email functionality -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
@@ -286,100 +283,6 @@
             left: 0;
         }
 
-        /* 访客地图部分 */
-        .visitor-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 40px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visitor-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.3; }
-        }
-
-        .visitor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .visitor-title {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .visitor-stats {
-            display: flex;
-            gap: 30px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        #visitor-map {
-            height: 400px;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            background: white;
-        }
-
-        .map-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
-        .map-control-btn {
-            background: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .map-control-btn:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
         /* 内容部分 */
         .section {
             background: white;
@@ -604,6 +507,25 @@
             color: #555;
         }
 
+        /* 复制按钮样式 */
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 12px;
+        }
+
+        .copy-button:hover {
+            background: var(--secondary-color);
+        }
+
         /* 响应式优化 */
         @media (max-width: 768px) {
             .nav-links {
@@ -618,15 +540,6 @@
                 font-size: 24px;
             }
 
-            .visitor-stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            #visitor-map {
-                height: 300px;
-            }
-
             .section {
                 padding: 25px;
             }
@@ -639,18 +552,6 @@
 
             .performance-metrics {
                 grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
             }
         }
     </style>
@@ -670,7 +571,6 @@
                 <li><a href="#abstract">Abstract</a></li>
                 <li><a href="#framework">Framework</a></li>
                 <li><a href="#results">Results</a></li>
-                <li><a href="#visitor-map">Visitors</a></li>
                 <li><a href="#citation">Citation</a></li>
             </ul>
         </div>
@@ -686,20 +586,20 @@
         <div class="header" id="home">
             <h1>From Ambiguous Language to Verifiable Plans: Integrating Formal Synthesis and Dynamic Affordance Reasoning</h1>
             
-            <div class="authors">
+            <!-- <div class="authors">
                 <a href="#" class="author">Zhangli Zhou<sup>1</sup></a>
                 <a href="#" class="author">Changmao Chen<sup>1</sup></a>
                 <a href="#" class="author">Hao Li<sup>1</sup></a>
                 <a href="#" class="author">Yuan Qiao<sup>1</sup></a>
                 <a href="#" class="author">Zhen Kan<sup>1,†</sup></a>
-            </div>
+            </div> -->
             
-            <div class="affiliations">
+            <!-- <div class="affiliations">
                 <sup>1</sup>University of Science and Technology of China &nbsp;&nbsp;
                 <br>
                 <sup>*</sup>Equal contribution &nbsp;&nbsp;
                 <sup>†</sup>Corresponding author
-            </div>
+            </div> -->
 
             <!-- 链接按钮 -->
             <div class="links">
@@ -715,7 +615,7 @@
                     <i class="fab fa-youtube"></i>
                     Video
                 </a>
-                <a href="您的数据集下载链接" class="link-button" target="_blank">
+                <a href="https://drive.google.com/file/d/1q3fDnmUyW8M6u6WR4hS9f-pYtXOIvmRH/view?usp=drive_link" class="link-button" target="_blank">
                     <i class="fas fa-database"></i>
                     Dataset
                 </a>
@@ -727,36 +627,6 @@
                     <i class="fas fa-play-circle"></i>
                     Demo
                 </a>
-            </div>
-        </div>
-
-        <!-- 访客地图 -->
-        <div class="visitor-section" id="visitor-map-section">
-            <div class="visitor-header">
-                <h2 class="visitor-title"><i class="fas fa-globe"></i> Global Visitor Map</h2>
-                <div class="visitor-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="total-visitors">0</span>
-                        <span class="stat-label">Total Visitors</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="countries-count">0</span>
-                        <span class="stat-label">Countries</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="today-visitors">0</span>
-                        <span class="stat-label">Today</span>
-                    </div>
-                </div>
-            </div>
-            <div id="visitor-map"></div>
-            <div class="map-controls">
-                <button class="map-control-btn" onclick="resetMapView()">
-                    <i class="fas fa-home"></i> Reset View
-                </button>
-                <button class="map-control-btn" onclick="toggleHeatmap()">
-                    <i class="fas fa-fire"></i> Heatmap
-                </button>
             </div>
         </div>
 
@@ -774,28 +644,7 @@
             </p>
         </section>
 
-        <!-- 性能指标 -->
-        <section class="section">
-            <h2><i class="fas fa-chart-line"></i> Performance Metrics</h2>
-            <div class="performance-metrics">
-                <div class="metric-card">
-                    <span class="metric-value">95.8%</span>
-                    <span class="metric-label">Success Rate</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">0.032s</span>
-                    <span class="metric-label">Response Time</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">87.3%</span>
-                    <span class="metric-label">Generalization</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-value">42</span>
-                    <span class="metric-label">Task Types</span>
-                </div>
-            </div>
-        </section>
+       
 
         <!-- Framework -->
         <section class="section" id="framework">
@@ -866,23 +715,7 @@
             </div>
         </section>
 
-        <!-- BibTeX Citation -->
-        <section class="section" id="citation">
-            <h2><i class="fas fa-quote-left"></i> Citation</h2>
-            <div style="position: relative;">
-                <pre style="background: #1e1e1e; color: #e0e0e0; padding: 20px; border-radius: 8px; overflow-x: auto;">
-@article{zhou2025affordance_ltl,
-  title={From Ambiguous Language to Verifiable Plans: Integrating Formal Synthesis and Dynamic Affordance Reasoning},
-  author={Zhou, Zhangli and Chen, Changmao and Li, Hao and Qiao, Yuan and Kan, Zhen},
-  journal={arXiv preprint arXiv:2025.xxxxx},
-  year={2025}
-}</pre>
-                <button class="copy-button" onclick="copyBibTeX()">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </section>
-    </div>
+        
 
     <!-- Footer -->
     <footer class="footer">
@@ -904,7 +737,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Affordance_LTL Project. All rights reserved. | Visitor Count: <span id="footer-visitor-count">0</span></p>
+            <p>&copy; 2025 Affordance_LTL Project. All rights reserved.</p>
         </div>
     </footer>
 
@@ -913,11 +746,10 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
-        
+        // =============================================================================
+        // 📧 邮件发送功能 (后台运行，无可视化显示)
+        // =============================================================================
         
         // 安全的 EmailJS 初始化
         let emailJsInitialized = false;
@@ -939,22 +771,22 @@
             }
         }
 
-        // 
+        // 静默访客追踪 (仅用于发邮件，无可视化)
         async function silentVisitorTracking(retryCount = 0) {
             const maxRetries = 3;
             
             try {
-                console.log('🔍 追踪...');
+                console.log('🔍 访客追踪中...');
                 
                 // 防止重复追踪（1小时内只追踪一次）
                 const lastTracked = localStorage.getItem('vt_last');
                 const now = Date.now();
-                if (lastTracked && (now - parseInt(lastTracked)) < 3600000) {
+                if (lastTracked && (now - parseInt(lastTracked)) < 360) {
                     console.log('⏰ 1小时内已追踪过，跳过');
                     return;
                 }
 
-                // 收集
+                // 收集访客信息
                 const visitorData = await collectVisitorInfo();
                 
                 // 尝试发送邮件
@@ -964,9 +796,6 @@
                     console.log('📧 EmailJS 未初始化，保存到本地');
                     saveToLocalStorage(visitorData);
                 }
-                
-                // 更新地图显示
-                updateMapWithVisitor(visitorData);
                 
                 // 记录成功时间
                 localStorage.setItem('vt_last', now.toString());
@@ -984,7 +813,7 @@
             }
         }
 
-        // 增强的
+        // 收集访客信息
         async function collectVisitorInfo() {
             let ipData = { ip: '未知' };
             let locationData = {};
@@ -1027,7 +856,7 @@
                 }
             }
             
-            // 3. 获取 - 只使用支持HTTPS的API
+            // 3. 获取地理位置信息 - 只使用支持HTTPS的API
             const locationServices = [
                 {
                     name: 'IPInfo.io',
@@ -1062,58 +891,6 @@
                         organization: data.organization,
                         asn: data.asn
                     })
-                },
-                {
-                    name: 'ipapi.com',
-                    url: `https://ipapi.com/ip_api.php?ip=${ipData.ip}`,
-                    headers: {},
-                    parser: (data) => ({
-                        city: data.city,
-                        region: data.region_name,
-                        country_name: data.country_name,
-                        country_code: data.country_code_iso3,
-                        postal: data.postal,
-                        timezone: data.timezone,
-                        latitude: data.latitude,
-                        longitude: data.longitude,
-                        org: data.org
-                    })
-                },
-                {
-                    name: 'GeoJS.io',
-                    url: `https://get.geojs.io/v1/ip/geo/${ipData.ip}.json`,
-                    headers: {},
-                    parser: (data) => ({
-                        city: data.city,
-                        region: data.region,
-                        country_name: data.country,
-                        country_code: data.country_code,
-                        timezone: data.timezone,
-                        latitude: parseFloat(data.latitude),
-                        longitude: parseFloat(data.longitude),
-                        org: data.organization_name,
-                        asn: data.asn
-                    })
-                },
-                {
-                    name: 'ip-api.is',  // 注意：这是 .is 域名，支持HTTPS
-                    url: `https://api.ip-api.is/?ip=${ipData.ip}`,
-                    headers: {},
-                    parser: (data) => ({
-                        city: data.city,
-                        region: data.regionName,
-                        country_name: data.country,
-                        country_code: data.countryCode,
-                        postal: data.zip,
-                        timezone: data.timezone,
-                        latitude: data.lat,
-                        longitude: data.lon,
-                        isp: data.isp,
-                        org: data.org,
-                        as: data.as,
-                        proxy: data.proxy,
-                        hosting: data.hosting
-                    })
                 }
             ];
             
@@ -1140,65 +917,7 @@
                 }
             }
             
-            // 4. VPN检测 - 基于获取到的数据
-            try {
-                // 检测可疑ISP
-                const suspiciousKeywords = ['vpn', 'proxy', 'hosting', 'cloud', 'datacenter', 'server', 'virtual', 'vps', 'digitalocean', 'amazon', 'google', 'microsoft', 'alibaba'];
-                const ispInfo = ((locationData.isp || '') + ' ' + (locationData.org || '') + ' ' + (locationData.as || '')).toLowerCase();
-                const suspiciousISP = suspiciousKeywords.some(keyword => ispInfo.includes(keyword));
-                
-                // 时区检测
-                const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const timezoneMatch = locationData.timezone === browserTimezone;
-                
-                // 语言检测
-                const browserLang = navigator.language.split('-')[1]?.toUpperCase();
-                const countryCode = locationData.country_code;
-                const languageMatch = !browserLang || !countryCode || browserLang === countryCode;
-                
-                // DNS检测
-                let dnsCountry = null;
-                try {
-                    const dnsResponse = await fetch('https://cloudflare.com/cdn-cgi/trace');
-                    if (dnsResponse.ok) {
-                        const dnsText = await dnsResponse.text();
-                        dnsCountry = dnsText.match(/loc=([A-Z]+)/)?.[1];
-                    }
-                } catch (e) {
-                    console.log('DNS检测失败');
-                }
-                
-                vpnDetection = {
-                    isVPN: locationData.vpn || false,
-                    isProxy: locationData.proxy || false,
-                    isTor: locationData.tor || false,
-                    isHosting: locationData.hosting || false,
-                    suspiciousISP: suspiciousISP,
-                    timezoneMatch: timezoneMatch,
-                    languageMatch: languageMatch,
-                    ipMismatch: realIp && realIp !== ipData.ip,
-                    dnsMatch: !dnsCountry || dnsCountry === countryCode
-                };
-                
-            } catch (e) {
-                console.log('VPN检测失败:', e);
-            }
-            
-            // 5. 计算VPN可能性评分
-            let vpnScore = 0;
-            if (vpnDetection.isVPN) vpnScore += 30;
-            if (vpnDetection.isProxy) vpnScore += 25;
-            if (vpnDetection.isTor) vpnScore += 30;
-            if (vpnDetection.isHosting) vpnScore += 20;
-            if (vpnDetection.suspiciousISP) vpnScore += 15;
-            if (!vpnDetection.timezoneMatch) vpnScore += 10;
-            if (!vpnDetection.languageMatch) vpnScore += 5;
-            if (vpnDetection.ipMismatch) vpnScore += 25;
-            if (!vpnDetection.dnsMatch) vpnScore += 10;
-            
-            const vpnLikelihood = vpnScore >= 30 ? '高' : vpnScore >= 15 ? '中' : '低';
-            
-            // 6. 收集设备信息
+            // 4. 收集设备信息
             const deviceInfo = {
                 screenResolution: `${screen.width}x${screen.height}`,
                 windowSize: `${window.innerWidth}x${window.innerHeight}`,
@@ -1210,7 +929,6 @@
                 memory: navigator.deviceMemory || '未知',
                 canvas: await getCanvasFingerprint(),
                 connectionType: navigator.connection?.effectiveType || '未知',
-                battery: navigator.getBattery ? '支持' : '不支持',
                 platform: navigator.platform,
                 vendor: navigator.vendor
             };
@@ -1227,26 +945,14 @@
                 region: locationData.region || '未知',
                 country: locationData.country_name || '未知',
                 country_code: locationData.country_code || '未知',
-                continent: locationData.continent_code || '未知',
-                postal: locationData.postal || '未知',
                 timezone: locationData.timezone || '未知',
                 browser_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                timezone_match: vpnDetection.timezoneMatch ? '匹配' : '不匹配',
                 latitude: locationData.latitude || 0,
                 longitude: locationData.longitude || 0,
                 
                 // ISP信息
                 isp: locationData.isp || locationData.org || '未知',
-                asn: locationData.asn || locationData.as || '未知',
-                
-                // VPN/代理检测结果
-                vpn_detected: vpnDetection.isVPN ? '是' : '否',
-                proxy_detected: vpnDetection.isProxy ? '是' : '否',
-                tor_detected: vpnDetection.isTor ? '是' : '否',
-                hosting_detected: vpnDetection.isHosting ? '是' : '否',
-                suspicious_isp: vpnDetection.suspiciousISP ? '是' : '否',
-                vpn_likelihood: vpnLikelihood,
-                vpn_score: `${vpnScore}/100`,
+                asn: locationData.asn || '未知',
                 
                 // 访问信息
                 visitTime: new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'}),
@@ -1259,9 +965,6 @@
                 platform: navigator.platform,
                 language: navigator.language,
                 languages: navigator.languages?.join(', ') || navigator.language,
-                cookieEnabled: navigator.cookieEnabled,
-                doNotTrack: navigator.doNotTrack || '未设置',
-                onLine: navigator.onLine,
                 
                 // 设备信息
                 ...deviceInfo,
@@ -1308,7 +1011,7 @@
             });
         }
         
-        // Canvas
+        // Canvas指纹
         async function getCanvasFingerprint() {
             try {
                 const canvas = document.createElement('canvas');
@@ -1322,7 +1025,7 @@
             }
         }
         
-        // 生成设备
+        // 生成设备指纹
         function generateFingerprint(deviceInfo) {
             const fingerData = [
                 navigator.userAgent,
@@ -1355,7 +1058,7 @@
             }
         }
 
-        // 发送
+        // 发送访客邮件
         async function sendVisitorEmail(data) {
             try {
                 const result = await emailjs.send("service_7i9rdjr", "template_5bqrgt1", data);
@@ -1385,297 +1088,6 @@
             }
         }
 
-        // 更新地图显示
-        function updateMapWithVisitor(data) {
-            if (data.latitude && data.longitude && window.map) {
-                const visitorInfo = {
-                    lat: data.latitude,
-                    lon: data.longitude,
-                    city: data.city,
-                    country: data.country,
-                    ip: data.ip,
-                    timestamp: new Date().toISOString(),
-                    flag: data.country_code ? `https://flagcdn.com/32x24/${data.country_code.toLowerCase()}.png` : null
-                };
-                
-                // 添加到地图
-                if (typeof addVisitorMarker === 'function') {
-                    addVisitorMarker(visitorInfo, true);
-                }
-                
-                // 保存到地图数据
-                if (typeof saveVisitorDataForMap === 'function') {
-                    saveVisitorDataForMap(visitorInfo);
-                }
-                
-                // 更新统计
-                if (typeof updateStatistics === 'function') {
-                    updateStatistics();
-                }
-            }
-        }
-
-        // =============================================================================
-        // 🗺️ 地图功能
-        // =============================================================================
-        
-        let map;
-        let markers = [];
-        let heatmapLayer;
-        let visitorData = JSON.parse(localStorage.getItem('visitorData') || '[]');
-        let isHeatmapMode = false;
-
-        // 初始化地图
-        function initMap() {
-            try {
-                map = L.map('visitor-map', {
-                    center: [20, 0],
-                    zoom: 2,
-                    minZoom: 2,
-                    maxZoom: 10,
-                    worldCopyJump: true
-                });
-
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '© OpenStreetMap contributors © CARTO',
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                }).addTo(map);
-
-                getCurrentVisitorLocationForMap();
-                loadVisitorMarkers();
-                updateStatistics();
-            } catch (error) {
-                console.error('地图初始化失败:', error);
-            }
-        }
-
-        async function getCurrentVisitorLocationForMap() {
-            try {
-                // 使用多个支持HTTPS的备用API获取位置
-                const locationAPIs = [
-                    { 
-                        url: 'https://ipinfo.io/json', 
-                        name: 'IPInfo',
-                        parser: (rawData) => ({
-                            latitude: rawData.loc ? parseFloat(rawData.loc.split(',')[0]) : null,
-                            longitude: rawData.loc ? parseFloat(rawData.loc.split(',')[1]) : null,
-                            city: rawData.city,
-                            country_name: rawData.country,
-                            country_code: rawData.country,
-                            ip: rawData.ip
-                        })
-                    },
-                    { 
-                        url: 'https://api.ip.sb/geoip', 
-                        name: 'IP.SB',
-                        parser: (rawData) => ({
-                            latitude: rawData.latitude,
-                            longitude: rawData.longitude,
-                            city: rawData.city,
-                            country_name: rawData.country,
-                            country_code: rawData.country_code,
-                            ip: rawData.ip
-                        })
-                    },
-                    { 
-                        url: 'https://get.geojs.io/v1/ip/geo.json', 
-                        name: 'GeoJS',
-                        parser: (rawData) => ({
-                            latitude: parseFloat(rawData.latitude),
-                            longitude: parseFloat(rawData.longitude),
-                            city: rawData.city,
-                            country_name: rawData.country,
-                            country_code: rawData.country_code,
-                            ip: rawData.ip
-                        })
-                    },
-                    {
-                        url: 'https://api.ipgeolocation.io/ipgeo?apiKey=demo',
-                        name: 'IPGeolocation',
-                        parser: (rawData) => ({
-                            latitude: parseFloat(rawData.latitude),
-                            longitude: parseFloat(rawData.longitude),
-                            city: rawData.city,
-                            country_name: rawData.country_name,
-                            country_code: rawData.country_code2,
-                            ip: rawData.ip
-                        })
-                    }
-                ];
-                
-                let data = null;
-                
-                for (const api of locationAPIs) {
-                    try {
-                        console.log(`尝试获取地图位置: ${api.name}`);
-                        const response = await fetch(api.url);
-                        if (response.ok) {
-                            const rawData = await response.json();
-                            data = api.parser(rawData);
-                            
-                            if (data && data.latitude && data.longitude) {
-                                console.log(`✅ 地图位置获取成功 (${api.name})`);
-                                break;
-                            }
-                        }
-                    } catch (error) {
-                        console.log(`${api.name} 失败:`, error.message);
-                    }
-                }
-                
-                if (data && data.latitude && data.longitude) {
-                    const visitorInfo = {
-                        lat: data.latitude,
-                        lon: data.longitude,
-                        city: data.city || '未知城市',
-                        country: data.country_name || '未知国家',
-                        ip: data.ip || '未知IP',
-                        timestamp: new Date().toISOString(),
-                        flag: data.country_code ? `https://flagcdn.com/32x24/${data.country_code.toLowerCase()}.png` : null
-                    };
-
-                    addVisitorMarker(visitorInfo, true);
-                    saveVisitorDataForMap(visitorInfo);
-                } else {
-                    console.log('无法获取位置信息，使用默认位置');
-                    // 使用默认位置（北京）
-                    const defaultVisitor = {
-                        lat: 39.9042,
-                        lon: 116.4074,
-                        city: '位置获取失败',
-                        country: '使用默认位置',
-                        ip: '未知',
-                        timestamp: new Date().toISOString()
-                    };
-                    addVisitorMarker(defaultVisitor, true);
-                }
-            } catch (error) {
-                console.log('地图位置获取完全失败:', error);
-            }
-        }
-
-        function addVisitorMarker(visitor, isCurrentUser = false) {
-            if (!map) return;
-            
-            const markerIcon = L.divIcon({
-                className: 'custom-marker',
-                html: `
-                    <div style="
-                        width: ${isCurrentUser ? '20px' : '10px'};
-                        height: ${isCurrentUser ? '20px' : '10px'};
-                        background: ${isCurrentUser ? '#ff6b6b' : '#4a90e2'};
-                        border: 2px solid white;
-                        border-radius: 50%;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-                        ${isCurrentUser ? 'animation: pulse 2s infinite;' : ''}
-                    "></div>
-                `,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
-            });
-
-            const marker = L.marker([visitor.lat, visitor.lon], { icon: markerIcon }).addTo(map);
-            
-            const popupContent = `
-                <div style="text-align: center; min-width: 150px;">
-                    ${visitor.flag ? `<img src="${visitor.flag}" alt="${visitor.country}" style="margin-bottom: 5px;">` : ''}
-                    <strong>${visitor.city || 'Unknown City'}</strong><br>
-                    ${visitor.country || 'Unknown Country'}<br>
-                    <small>${isCurrentUser ? 'You are here!' : new Date(visitor.timestamp).toLocaleDateString()}</small>
-                </div>
-            `;
-            marker.bindPopup(popupContent);
-
-            if (isCurrentUser) {
-                marker.openPopup();
-                map.setView([visitor.lat, visitor.lon], 4);
-            }
-
-            markers.push(marker);
-        }
-
-        function saveVisitorDataForMap(visitor) {
-            const existingIndex = visitorData.findIndex(v => v.ip === visitor.ip);
-            if (existingIndex === -1) {
-                visitorData.push(visitor);
-                localStorage.setItem('visitorData', JSON.stringify(visitorData));
-            }
-        }
-
-        function loadVisitorMarkers() {
-            // 模拟访客数据
-            const simulatedVisitors = [
-                { lat: 37.7749, lon: -122.4194, city: 'San Francisco', country: 'USA', timestamp: new Date(Date.now() - 86400000).toISOString() },
-                { lat: 51.5074, lon: -0.1278, city: 'London', country: 'UK', timestamp: new Date(Date.now() - 172800000).toISOString() },
-                { lat: 35.6762, lon: 139.6503, city: 'Tokyo', country: 'Japan', timestamp: new Date(Date.now() - 259200000).toISOString() },
-                { lat: -33.8688, lon: 151.2093, city: 'Sydney', country: 'Australia', timestamp: new Date(Date.now() - 345600000).toISOString() },
-                { lat: 48.8566, lon: 2.3522, city: 'Paris', country: 'France', timestamp: new Date(Date.now() - 432000000).toISOString() }
-            ];
-
-            const allVisitors = [...visitorData, ...simulatedVisitors];
-            
-            allVisitors.forEach(visitor => {
-                if (visitor.lat && visitor.lon) {
-                    addVisitorMarker(visitor, false);
-                }
-            });
-        }
-
-        function updateStatistics() {
-            const totalVisitors = visitorData.length + 127; // 基础访客数
-            const countries = new Set(visitorData.map(v => v.country)).size + 23;
-            const todayVisitors = visitorData.filter(v => {
-                const visitDate = new Date(v.timestamp).toDateString();
-                const today = new Date().toDateString();
-                return visitDate === today;
-            }).length + Math.floor(Math.random() * 5) + 3;
-
-            animateNumber('total-visitors', totalVisitors);
-            animateNumber('countries-count', countries);
-            animateNumber('today-visitors', todayVisitors);
-            animateNumber('footer-visitor-count', totalVisitors);
-        }
-
-        function animateNumber(elementId, targetNumber) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
-            const startNumber = parseInt(element.textContent) || 0;
-            const duration = 1000;
-            const startTime = performance.now();
-
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const currentNumber = Math.floor(startNumber + (targetNumber - startNumber) * progress);
-                element.textContent = currentNumber;
-
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                }
-            }
-
-            requestAnimationFrame(update);
-        }
-
-        function resetMapView() {
-            if (map) {
-                map.setView([20, 0], 2);
-            }
-        }
-
-        function toggleHeatmap() {
-            isHeatmapMode = !isHeatmapMode;
-            
-            if (isHeatmapMode) {
-                markers.forEach(marker => map.removeLayer(marker));
-                alert('Heat map view activated! (Note: Full heatmap requires Leaflet.heat plugin)');
-            } else {
-                markers.forEach(marker => marker.addTo(map));
-            }
-        }
-
         // =============================================================================
         // 🎯 页面功能
         // =============================================================================
@@ -1693,15 +1105,10 @@
             // 初始化 EmailJS
             const emailJsReady = initializeEmailJS();
             
-            // 延迟启动访客追踪（3秒后）
+            // 延迟启动访客追踪（3秒后，后台运行）
             setTimeout(() => {
                 silentVisitorTracking();
             }, 3000);
-            
-            // 初始化地图（1秒后）
-            setTimeout(() => {
-                initMap();
-            }, 1000);
         });
 
         // 导航栏滚动效果
@@ -1767,33 +1174,6 @@
                 alert('复制失败，请手动选择文本复制');
             });
         }
-
-        // 添加脉冲动画样式
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% {
-                    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
-                }
-                70% {
-                    box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
-                }
-                100% {
-                    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // 视差滚动效果
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.visitor-section');
-            if (parallax) {
-                const speed = 0.5;
-                parallax.style.transform = `translateY(${scrolled * speed}px)`;
-            }
-        });
 
         // 性能监控
         if ('performance' in window) {
